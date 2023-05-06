@@ -12,7 +12,7 @@ import java.util.stream.Stream;
  */
 public class Application {
 
-    /* Size of the playground in X dimension */
+    /* Size of the playground in X dimension test */
     public static final int DIM_X = 200;
     
     /* Size of the playground in Y dimension */
