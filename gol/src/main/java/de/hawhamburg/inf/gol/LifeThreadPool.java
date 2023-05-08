@@ -30,7 +30,26 @@ public class LifeThreadPool {
      * @throws InterruptedException 
      */
     public void barrier() throws InterruptedException {
-        // TODO
+        boolean areThreadsRunnig = true; 
+        
+        while (areThreadsRunnig)
+        {
+            areThreadsRunnig = false; 
+        }
+        
+        for (LifeThread thread : threads)
+        {
+            if (thread != null && thread.isAlive())
+            {
+                areThreadsRunnig = true; 
+                break; 
+            }
+        }
+        
+        if (areThreadsRunnig)
+        {
+            Thread.sleep(20); 
+        }
     }
     
     /**
