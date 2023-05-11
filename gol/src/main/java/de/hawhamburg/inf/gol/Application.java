@@ -85,7 +85,7 @@ public class Application {
             
             try {
                 // Wait SLEEP milliseconds until the next generation
-                Thread.sleep(100);
+                Thread.sleep(SLEEP);
                 // TODO
             } catch (InterruptedException ex) {
                 Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
