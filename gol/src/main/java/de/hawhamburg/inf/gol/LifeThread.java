@@ -28,8 +28,14 @@ public class LifeThread extends Thread {
     
     @Override
     public void run() {
+       
         while (!isInterrupted) {
-            // TODO
+            try { 
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(LifeThread.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }
     }
 }
