@@ -1,6 +1,6 @@
 package de.hawhamburg.inf.gol;
 
-import java.util.Random;
+
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -74,7 +74,7 @@ public class Application {
             }
 
             // Wait for all threads to finish this generation
-            // TODO
+            
             
             // Submit switch to next generation for each cell and force a
             // window repaint to update the graphics
@@ -83,8 +83,13 @@ public class Application {
                 window.repaint();
             });
             
-            // Wait SLEEP milliseconds until the next generation
-           // TODO
+            try {
+                // Wait SLEEP milliseconds until the next generation
+                Thread.sleep(100);
+                // TODO
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }
