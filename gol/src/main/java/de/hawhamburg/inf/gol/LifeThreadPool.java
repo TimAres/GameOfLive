@@ -48,7 +48,7 @@ public class LifeThreadPool {
         
         if (areThreadsRunnig)
         {
-            Thread.sleep(20); 
+            Thread.sleep(2000); 
         }
     }
     
