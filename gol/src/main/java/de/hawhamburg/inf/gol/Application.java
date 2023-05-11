@@ -1,6 +1,7 @@
 package de.hawhamburg.inf.gol;
 
 import java.util.Random;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -29,15 +30,24 @@ public class Application {
      * Creates an potentially unlimited stream of Cell objects. The stream uses
      * random numbers between [0, 1] and the probability threshold whether a
      * cell is created DEAD (random > p) or ALIVE (random <= p).
-     * 
+     *
      * @param p Cell alive probability threshold.
-     * @return 
+     * @return
      */
     private static Stream<Cell> createCellStream(float p) {
-        // TODO_Test
-        
-        return null; // FIXME
+
+        //Supplier brauche ich um einen Wert zu generiere, zB eine Liste von Zufallszahlen
+        return Stream.generate(new Supplier<Cell>() {
+            public Cell get() {
+                if (Math.random() <= p) {
+                    return new Cell(Cell.ALIVE);
+                } else {
+                    return new Cell(Cell.DEAD);
+                }
+            }
+        });
     }
+
     
     public static void main(String[] args) {
         Stream<Cell> cellStream = createCellStream(ALIVE_PROBABILITY);
