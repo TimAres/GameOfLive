@@ -73,10 +73,17 @@ public class Application {
                 }
             }
 
-            // Wait for all threads to finish this generation
-            
+            try {
+                // Wait for all threads to finish this generation
+                pool.barrier();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
             // Submit switch to next generation for each cell and force a
+            
+            
+            
             // window repaint to update the graphics
             pool.submit(() -> {
                 playground.asList().forEach(cell -> cell.nextGen());
