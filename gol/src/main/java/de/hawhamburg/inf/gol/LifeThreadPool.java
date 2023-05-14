@@ -30,32 +30,30 @@ public class LifeThreadPool {
      * @throws InterruptedException 
      */
     public void barrier() throws InterruptedException {
-        boolean areThreadsRunnig = true; 
-        
-        while (areThreadsRunnig)
-        {
-            areThreadsRunnig = false; 
-        }
-        
+    boolean areThreadsRunnig = true; 
+    
+    while (areThreadsRunnig)
+    {
+        areThreadsRunnig = false;
         for (LifeThread thread : threads)
         {
             if (thread != null && thread.isAlive())
             {
-                areThreadsRunnig = true; 
-                break; 
+                areThreadsRunnig = true;
+                break;
             }
         }
-        
         if (areThreadsRunnig)
         {
-            Thread.sleep(2000); 
+            Thread.sleep(2000);
         }
     }
+}
     
     /**
      * Calls interrupt() on every thread in this pool.
      */
-    public void interrupt()
+    public synchronized void interrupt()
     {
     Stream.of(threads).forEach(Thread::interrupt);
     }
@@ -67,7 +65,7 @@ public class LifeThreadPool {
      * 
      * @throws InterruptedException 
      */
-    public void joinAndExit() throws InterruptedException
+    public synchronized void joinAndExit() throws InterruptedException
     {
         barrier(); 
         interrupt(); 
@@ -77,7 +75,7 @@ public class LifeThreadPool {
      * 
      * @param task Runnable containing the work to be done 
      */
-    public void submit(Runnable task)
+    public synchronized void submit(Runnable task)
     {
         // Sicherheit gegen Ueberlastung der Queue 
         tasks.offer(task); 
@@ -91,7 +89,7 @@ public class LifeThreadPool {
      * @return Next task from the pool queue
      * @throws InterruptedException 
      */
-    public Runnable nextTask() throws InterruptedException {
+    public synchronized Runnable nextTask() throws InterruptedException {
         synchronized (tasks)
         {
             while(tasks.isEmpty())

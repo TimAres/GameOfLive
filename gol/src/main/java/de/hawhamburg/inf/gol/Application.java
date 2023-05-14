@@ -69,7 +69,6 @@ public class Application {
                                        
                     // Submit new life.process() call as runable to the pool
                     // TODO
-                    
                 }
             }
 
@@ -85,7 +84,8 @@ public class Application {
             
             
             // window repaint to update the graphics
-            pool.submit(() -> {
+            pool.submit(() ->
+            {
                 playground.asList().forEach(cell -> cell.nextGen());
                 window.repaint();
             });
