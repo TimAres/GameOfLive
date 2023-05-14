@@ -1,7 +1,10 @@
 package de.hawhamburg.inf.gol;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 /**
@@ -49,7 +52,6 @@ public class LifeThreadPool {
         }
     }
 }
-    
     /**
      * Calls interrupt() on every thread in this pool.
      */
@@ -79,7 +81,7 @@ public class LifeThreadPool {
     {
         // Sicherheit gegen Ueberlastung der Queue 
         tasks.offer(task); 
-        tasks.notifyAll(); 
+        tasks.notifyAll();
     }
     
     /**
@@ -104,7 +106,8 @@ public class LifeThreadPool {
     public void start() {
         for (int i = 0; i < numThreads; i++) {
             threads[i] = new LifeThread(this); 
-            threads[i].start(); 
+            //threads[i].start(); 
         }
+        Arrays.stream(threads).forEach(t -> t.start());
     }
 }

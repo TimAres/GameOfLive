@@ -1,9 +1,12 @@
 package de.hawhamburg.inf.gol;
 
 
+import java.util.List;
+import java.util.Random;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -37,7 +40,7 @@ public class Application {
     private static Stream<Cell> createCellStream(float p) {
 
         //Supplier brauche ich um einen Wert zu generiere, zB eine Liste von Zufallszahlen
-        return Stream.generate(new Supplier<Cell>() {
+        /*return Stream.generate(new Supplier<Cell>() {
             public Cell get() {
                 if (Math.random() <= p) {
                     return new Cell(Cell.ALIVE);
@@ -45,7 +48,11 @@ public class Application {
                     return new Cell(Cell.DEAD);
                 }
             }
-        });
+        });*/
+        Stream<Cell> cells = IntStream
+                .range(Integer.MIN_VALUE, Integer.MAX_VALUE)
+                .mapToObj(x -> new Cell((new Random()).nextFloat() > p ? 0 : 1));
+        return cells;
     }
 
     
@@ -63,13 +70,22 @@ public class Application {
         pool.start();
         
         while (true) {
+            int count = 0;
             Life life = new Life(playground);
+            List <Cell> cells = playground.asList();
             for (int xi = 0; xi < DIM_X; xi++) {
                 for (int yi = 0; yi < DIM_Y; yi++) {
-                                       
+                    final int x = xi;
+                    final int y = yi;    
+                    final int c = count;    
+                    pool.submit(() -> {
+                          life.process(cells.get(c), x, y);                          
+                      });   
+                      count++;
+                }                   
                     // Submit new life.process() call as runable to the pool
                     // TODO
-                }
+                
             }
 
             try {
@@ -80,9 +96,6 @@ public class Application {
             }
             
             // Submit switch to next generation for each cell and force a
-            
-            
-            
             // window repaint to update the graphics
             pool.submit(() ->
             {
