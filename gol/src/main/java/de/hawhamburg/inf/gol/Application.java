@@ -36,15 +36,7 @@ public class Application {
      * @return Stream of Cell objects.
      */
     private static Stream<Cell> createCellStream(float p) {
-        return Stream.generate(new Supplier<Cell>() {
-            public Cell get() {
-                if (Math.random() <= p) {
-                    return new Cell(Cell.ALIVE);
-                } else {
-                    return new Cell(Cell.DEAD);
-                }
-            }
-        });
+        return Stream.generate(() -> Math.random() <= p ? new Cell(Cell.ALIVE) : new Cell(Cell.DEAD));
     }
 
     public static void main(String[] args) {
