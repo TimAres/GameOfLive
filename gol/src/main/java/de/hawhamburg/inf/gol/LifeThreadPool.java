@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 /**
- * A pool of LifeThreads and a queue holding  to be processed.
+ * A pool of LifeThreads and a queue holding to be processed.
  * 
  * @author Christian Lins
  */
@@ -48,7 +48,7 @@ public class LifeThreadPool {
         }
         if (areThreadsRunnig)
         {
-            Thread.sleep(2000);
+            Thread.sleep(100);
         }
     }
 }
@@ -77,11 +77,13 @@ public class LifeThreadPool {
      * 
      * @param task Runnable containing the work to be done 
      */
-    public synchronized void submit(Runnable task)
-    {
-        // Sicherheit gegen Ueberlastung der Queue 
-        tasks.offer(task); 
-        tasks.notifyAll();
+    public void submit(Runnable task) {
+    synchronized (tasks) {
+        tasks.offer(task);
+        tasks.notify();
+    }
+
+        
     }
     
     /**
@@ -92,22 +94,20 @@ public class LifeThreadPool {
      * @throws InterruptedException 
      */
     public synchronized Runnable nextTask() throws InterruptedException {
-        synchronized (tasks)
-        {
-            while(tasks.isEmpty())
-            {
-                tasks.wait();
-            }
-            return tasks.poll(); 
-        }
+    while (tasks.isEmpty()) {
+        wait();
     }
+    return tasks.poll(); 
+}
+
     
     
     public void start() {
-        for (int i = 0; i < numThreads; i++) {
-            threads[i] = new LifeThread(this); 
-            //threads[i].start(); 
-        }
-        Arrays.stream(threads).forEach(t -> t.start());
+    for (int i = 0; i < numThreads; i++) {
+        threads[i] = new LifeThread(this); 
+        threads[i].start(); 
     }
 }
+    
+}
+
