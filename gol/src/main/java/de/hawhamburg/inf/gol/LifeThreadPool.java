@@ -33,23 +33,6 @@ public class LifeThreadPool {
      * @throws InterruptedException 
      */
     public void barrier() throws InterruptedException {
-    boolean areThreadsRunnig = true;
-    
-        /*while (areThreadsRunnig)
-
-            areThreadsRunnig = false;
-            for (LifeThread thread : threads)
-            {
-                if (thread != null && thread.isAlive())
-                {
-                    areThreadsRunnig = true;
-                    break;
-                }
-            }
-        if (areThreadsRunnig)
-        {
-            Thread.sleep(100);
-        }*/
         while (!tasks.isEmpty()) {
             try {
                 Thread.sleep(100);
@@ -63,8 +46,7 @@ public class LifeThreadPool {
      */
     public synchronized void interrupt()
     {
-        //Stream.of(threads).forEach(Thread::interrupt);
-        Arrays.stream(threads).forEach(t -> t.interrupt());
+        Stream.of(threads).forEach(Thread::interrupt);
     }
 
     
@@ -86,9 +68,8 @@ public class LifeThreadPool {
      */
     public void submit(Runnable task) {
     synchronized (tasks) {
-        /*tasks.offer(task);
-        tasks.notify();*/
-        tasks.add(task);
+        tasks.offer(task);
+        tasks.notify();
     }
 
         
@@ -102,10 +83,6 @@ public class LifeThreadPool {
      * @throws InterruptedException 
      */
     public Runnable nextTask() throws InterruptedException {
-    /*while (tasks.isEmpty()) {
-        tasks.wait();
-    }
-    return tasks.poll(); */
         synchronized(tasks) {
             while (tasks.isEmpty()) {
                 tasks.wait();
@@ -119,7 +96,6 @@ public class LifeThreadPool {
     public void start() {
         for (int i = 0; i < numThreads; i++) {
             threads[i] = new LifeThread(this);
-            //threads[i].start();
         }
         Arrays.stream(threads).forEach(t -> t.start());
         }

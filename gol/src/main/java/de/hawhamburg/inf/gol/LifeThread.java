@@ -30,8 +30,7 @@ public class LifeThread extends Thread {
     public void run() {
        
         while (!isInterrupted) {
-            try { 
-                //Thread.sleep(1000);
+            try {
                 pool.nextTask().run();
             } catch (InterruptedException ex) {
                 Logger.getLogger(LifeThread.class.getName()).log(Level.SEVERE, null, ex);

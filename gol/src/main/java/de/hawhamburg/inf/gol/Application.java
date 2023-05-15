@@ -36,11 +36,6 @@ public class Application {
      * @return Stream of Cell objects.
      */
     private static Stream<Cell> createCellStream(float p) {
-        /*Stream<Cell> cells = IntStream
-                //.range(0, DIM_X * DIM_Y)
-                .range(Integer.MIN_VALUE, Integer.MAX_VALUE)
-                .mapToObj(i -> new Cell((new Random()).nextFloat() > p ? 0:1));
-        return cells;*/
         return Stream.generate(new Supplier<Cell>() {
             public Cell get() {
                 if (Math.random() <= p) {
