@@ -36,10 +36,20 @@ public class Application {
      * @return Stream of Cell objects.
      */
     private static Stream<Cell> createCellStream(float p) {
-        Stream<Cell> cells = IntStream
-                .range(0, DIM_X * DIM_Y)
-                .mapToObj(i -> Math.random() <= p ? new Cell(Cell.ALIVE) : new Cell(Cell.DEAD));
-        return cells;
+        /*Stream<Cell> cells = IntStream
+                //.range(0, DIM_X * DIM_Y)
+                .range(Integer.MIN_VALUE, Integer.MAX_VALUE)
+                .mapToObj(i -> new Cell((new Random()).nextFloat() > p ? 0:1));
+        return cells;*/
+        return Stream.generate(new Supplier<Cell>() {
+            public Cell get() {
+                if (Math.random() <= p) {
+                    return new Cell(Cell.ALIVE);
+                } else {
+                    return new Cell(Cell.DEAD);
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {
@@ -53,7 +63,7 @@ public class Application {
 
         // Create and start a LifeThreadPool with 50 threads
         LifeThreadPool pool = new LifeThreadPool(50);
-        //pool.start();
+        pool.start();
 
         while (true) {
             int count = 0;
@@ -70,10 +80,11 @@ public class Application {
                     count++;
                 }
             }
-
+            pool.start();
             try {
                 // Wait for all threads to finish this generation
-                pool.barrier();
+                //pool.barrier();
+                pool.joinAndExit();
             } catch (InterruptedException ex) {
                 Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -81,7 +92,7 @@ public class Application {
             // Submit switch to next generation for each cell and force a
             // window repaint to update the graphics
             pool.submit(() -> {
-                playground.asList().forEach(Cell::nextGen);
+                playground.asList().forEach(cell -> cell.nextGen());
                 window.repaint();
             });
 
