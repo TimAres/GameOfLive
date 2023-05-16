@@ -67,11 +67,11 @@ public class Application {
                     count++;
                 }
             }
-            pool.start(); // neuer Start 
+            //pool.start(); // neuer Start 
             try {
                 // Wait for all threads to finish this generation
-                //pool.barrier();
-                pool.joinAndExit();
+                pool.barrier();
+                //pool.joinAndExit();
             } catch (InterruptedException ex) {
                 Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
             }

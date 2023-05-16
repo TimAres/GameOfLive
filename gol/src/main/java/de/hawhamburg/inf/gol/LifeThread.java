@@ -28,13 +28,13 @@ public class LifeThread extends Thread {
     
     @Override
     public void run() {
-        // Kommentare 
        
         while (!isInterrupted) {
             try {
                 pool.nextTask().run();
             } catch (InterruptedException ex) {
                 Logger.getLogger(LifeThread.class.getName()).log(Level.SEVERE, null, ex);
+                interrupt();
             }
             
         }

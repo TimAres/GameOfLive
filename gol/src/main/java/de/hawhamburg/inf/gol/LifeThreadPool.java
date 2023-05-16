@@ -34,13 +34,13 @@ public class LifeThreadPool {
      * @throws InterruptedException 
      */
     public void barrier() throws InterruptedException {
-        while (!tasks.isEmpty()) { // Solange die tasks liste leer ist 
-            try {
-                Thread.sleep(100); // thread pausieren 
-            } catch (InterruptedException ie) {
-                System.err.println("Application InterruptedException"); // Wenn eine InterruptedException auftritt, gebe eine Fehlermeldung aus
-            }
+        synchronized (tasks) {
+            while (!tasks.isEmpty()) { // Solange die tasks liste nicht leer ist 
+            tasks.wait();
+            
         }
+        }
+        
     }
     /**
      * Calls interrupt() on every thread in this pool.
@@ -86,8 +86,10 @@ public class LifeThreadPool {
     public Runnable nextTask() throws InterruptedException {
         synchronized(tasks) { // Synchronisiere den Zugriff auf die tasks-Liste
             while (tasks.isEmpty()) { // Füge die Aufgabe zur tasks-Liste hinzu
-                tasks.wait(); // Benachrichtige andere Threads, die auf tasks warten 
+                tasks.wait(); // Benachrichtige andere Threads, die auf tasks warten
+                
             }
+            tasks.notifyAll();
             return tasks.poll();
         }
 }
