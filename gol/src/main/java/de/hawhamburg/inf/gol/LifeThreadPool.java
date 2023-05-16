@@ -25,6 +25,7 @@ public class LifeThreadPool {
     public LifeThreadPool(int numThreads) {
         this.numThreads = numThreads;
         this.threads = new LifeThread[numThreads];
+        
     }
     
     /**
@@ -33,11 +34,11 @@ public class LifeThreadPool {
      * @throws InterruptedException 
      */
     public void barrier() throws InterruptedException {
-        while (!tasks.isEmpty()) {
+        while (!tasks.isEmpty()) { // Solange die tasks liste leer ist 
             try {
-                Thread.sleep(100);
+                Thread.sleep(100); // thread pausieren 
             } catch (InterruptedException ie) {
-                System.err.println("Application InterruptedException");
+                System.err.println("Application InterruptedException"); // Wenn eine InterruptedException auftritt, gebe eine Fehlermeldung aus
             }
         }
     }
@@ -46,7 +47,7 @@ public class LifeThreadPool {
      */
     public synchronized void interrupt()
     {
-        Stream.of(threads).forEach(Thread::interrupt);
+        Stream.of(threads).forEach(Thread::interrupt); // Unterbreche jeden Thread in der 'threads'-Sammlung
     }
 
     
@@ -58,8 +59,8 @@ public class LifeThreadPool {
      */
     public synchronized void joinAndExit() throws InterruptedException
     {
-        barrier(); 
-        interrupt(); 
+        barrier(); // Warte, bis alle Aufgaben abgeschlossen sind, indem die Methode 'barrier()' aufgerufen wird
+        interrupt(); // Unterbreche alle Threads, indem die Methode 'interrupt()' aufgerufen wird
     }
     /**
      * Adds a task to the queue of this pool.
@@ -83,9 +84,9 @@ public class LifeThreadPool {
      * @throws InterruptedException 
      */
     public Runnable nextTask() throws InterruptedException {
-        synchronized(tasks) {
-            while (tasks.isEmpty()) {
-                tasks.wait();
+        synchronized(tasks) { // Synchronisiere den Zugriff auf die tasks-Liste
+            while (tasks.isEmpty()) { // Füge die Aufgabe zur tasks-Liste hinzu
+                tasks.wait(); // Benachrichtige andere Threads, die auf tasks warten 
             }
             return tasks.poll();
         }
@@ -95,9 +96,9 @@ public class LifeThreadPool {
     
     public void start() {
         for (int i = 0; i < numThreads; i++) {
-            threads[i] = new LifeThread(this);
+            threads[i] = new LifeThread(this); // Erstelle einen neuen LifeThread und speichere ihn im threads-Array
         }
-        Arrays.stream(threads).forEach(t -> t.start());
+        Arrays.stream(threads).forEach(t -> t.start()); // Starte jeden Thread im 'threads'-Array
         }
     
 }

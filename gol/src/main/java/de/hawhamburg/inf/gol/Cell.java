@@ -42,5 +42,6 @@ public class Cell {
     /** Make the next generation the current generation */
     public void nextGen() {
         this.value = this.valueNext;
+        
     }
 }

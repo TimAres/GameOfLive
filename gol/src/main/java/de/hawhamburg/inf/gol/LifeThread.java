@@ -28,6 +28,7 @@ public class LifeThread extends Thread {
     
     @Override
     public void run() {
+        // Kommentare 
        
         while (!isInterrupted) {
             try {
